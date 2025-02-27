@@ -71,12 +71,12 @@ const Navbar = () => {
         <div className="flex flex-row justify-center items-center md:gap-6 gap-2">
           {!session ? (
             <>
-              <Button
-                variant="outline"
+              <Link
+                href="/login"
                 className="text-md text-gray-700 md:flex justify-center items-center hidden"
               >
                 Login
-              </Button>
+              </Link>
               <Button
                 variant="default"
                 className="md:flex justify-center items-center hidden"
@@ -176,12 +176,13 @@ const Navbar = () => {
           </Link>
           {!session && (
             <div className="flex gap-4 flex-row">
-              <Button
-                variant="outline"
-                className="text-md text-gray-700 flex justify-center items-center"
+              <Link
+                href="/login"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="text-md text-gray-700 md:m-0 m-2 flex justify-center items-center"
               >
                 Login
-              </Button>
+              </Link>
               <Button
                 variant="default"
                 className="flex justify-center items-center"
