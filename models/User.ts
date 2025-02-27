@@ -1,9 +1,9 @@
 import mongoose, { Schema, model, models } from "mongoose";
 
 export interface IUser {
+  username: string;
   email: string;
   password: string;
-  role: string;
   _id?: mongoose.Types.ObjectId;
   createdAt?: Date;
   updatedAt?: Date;
@@ -11,9 +11,9 @@ export interface IUser {
 
 const userSchema = new Schema<IUser>(
   {
+    username: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    role: { type: String, required: true, enum: ["user", "admin"] },
   },
   { timestamps: true }
 );

@@ -4,9 +4,9 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 export async function POST(request: NextRequest) {
   try {
-    const { email, password } = await request.json();
+    const { username, email, password } = await request.json();
 
-    if (!email || !password) {
+    if (!email || !password || !username) {
       return NextResponse.json(
         { error: "Email and password are required" },
         { status: 400 }
@@ -24,6 +24,7 @@ export async function POST(request: NextRequest) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await User.create({
+      username,
       email,
       password: hashedPassword,
     });
