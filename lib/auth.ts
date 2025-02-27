@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { NextAuthOptions } from "next-auth";
 import bcrypt from "bcryptjs";
 import connectToDatabase from "./db";
+import GoogleProvider from "next-auth/providers/google";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -45,6 +46,17 @@ export const authOptions: NextAuthOptions = {
         }
       },
     }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
+    }),
   ],
   callbacks: {
     async jwt({ token, user }) {
@@ -61,7 +73,27 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
+    async signIn({ user, account }) {
+      if (account?.provider === "google") {
+        try {
+          await connectToDatabase();
+          const existingUser = await User.findOne({ email: user.email });
+          if (!existingUser) {
+            await User.create({
+              email: user.email,
+              username: user.name,
+            });
+          }
+          return true;
+        } catch (error) {
+          console.log("Google login error:" + error);
+          return false;
+        }
+      }
+      return true;
+    },
   },
+
   pages: {
     signIn: "/login",
     error: "/login",

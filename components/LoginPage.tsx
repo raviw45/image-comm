@@ -16,7 +16,7 @@ import { Button } from "./ui/button";
 import { FcGoogle } from "react-icons/fc";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useLogin } from "@/features/useAuth";
+import { useAuthLogin, useLogin } from "@/features/useAuth";
 import Spinner from "./Spinner";
 import { useRouter } from "next/navigation";
 
@@ -37,6 +37,7 @@ const LoginPage = ({ setOpen }: { setOpen: () => void }) => {
     },
   });
   const { login, isLoginPending } = useLogin();
+  const { authLogin, isAuthLoginPending } = useAuthLogin();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   function onSubmit(values: z.infer<typeof loginSchema>) {
@@ -106,11 +107,12 @@ const LoginPage = ({ setOpen }: { setOpen: () => void }) => {
 
         {/* Google Login */}
         <Button
+          onClick={() => authLogin("google")}
           variant="outline"
           className="w-full flex items-center justify-center gap-2 mt-2"
         >
           <FcGoogle size={25} />
-          Continue with Google
+          {isAuthLoginPending ? <Spinner /> : "Continue with Google"}
         </Button>
 
         {/* Signup Link */}

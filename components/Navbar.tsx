@@ -10,7 +10,7 @@ import { FaClipboardList } from "react-icons/fa";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { MdHistory, MdLogout } from "react-icons/md";
 import { useSession } from "next-auth/react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -77,17 +77,21 @@ const Navbar = () => {
               >
                 Login
               </Link>
-              <Button
-                variant="default"
+              <Link
+                href="/register"
                 className="md:flex justify-center items-center hidden"
               >
-                Sign Up
-              </Button>
+                <Button>Sign Up</Button>
+              </Link>
             </>
           ) : (
             <DropdownMenu>
               <DropdownMenuTrigger className="focus:outline-none">
                 <Avatar className="border-2 border-gray-700 cursor-pointer">
+                  <AvatarImage
+                    src={session?.user?.image as string}
+                    alt="User Image"
+                  />
                   <AvatarFallback className="text-xl font-bold text-black">
                     {session?.user?.username?.slice(0, 1)}
                   </AvatarFallback>

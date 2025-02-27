@@ -63,3 +63,22 @@ export const useLogout = () => {
     isLogoutError: isError,
   };
 };
+
+export const useAuthLogin = () => {
+  const { mutate, isPending, isError } = useMutation({
+    mutationFn: (provider: string) => signIn(provider, { callbackUrl: "/" }),
+    onSuccess: () => toast("Login Successful!!"),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onError: (error: any) => {
+      console.log(error?.response?.data?.error);
+      toast(
+        error?.response?.data?.error || "Failed to login. Please try again..."
+      );
+    },
+  });
+  return {
+    authLogin: mutate,
+    isAuthLoginPending: isPending,
+    isAuthLoginError: isError,
+  };
+};
