@@ -127,6 +127,8 @@ const Navbar = () => {
                   <AvatarImage
                     src={session?.user?.image as string}
                     alt="User Image"
+                    width={30}
+                    height={30}
                   />
                   <AvatarFallback className="text-xl font-bold text-black">
                     {session?.user?.username?.slice(0, 1)}

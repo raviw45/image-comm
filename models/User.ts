@@ -3,7 +3,7 @@ import mongoose, { Schema, model, models } from "mongoose";
 export interface IUser {
   username: string;
   email: string;
-  role: string;
+  role?: string;
   password: string;
   _id?: mongoose.Types.ObjectId;
   createdAt?: Date;

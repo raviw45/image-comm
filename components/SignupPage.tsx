@@ -130,6 +130,7 @@ const SignupPage = () => {
             </Button>
             {/* Google Login */}
             <Button
+              type="button"
               onClick={() => authLogin("google")}
               variant="outline"
               className="w-full flex items-center justify-center gap-2 mt-2"

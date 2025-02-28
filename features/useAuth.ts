@@ -7,13 +7,34 @@ import { toast } from "sonner";
 export const useRegister = () => {
   const { mutate, isPending, isError } = useMutation({
     mutationFn: (data: IUser) => registerApi(data),
-    onSuccess: () => toast("User registered successfully!!"),
+    onSuccess: () => {
+      toast("User registered successfully!!", {
+        closeButton: true,
+        style: {
+          background: "green",
+          color: "#fff",
+          fontSize: "16px",
+          textTransform: "capitalize",
+        },
+        position: "top-right",
+      });
+    },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       console.log(error?.response?.data?.error);
       toast(
         error?.response?.data?.error ||
-          "Failed to register user. Please try again."
+          "Failed to register user. Please try again.",
+        {
+          closeButton: true,
+          style: {
+            background: "red",
+            color: "#fff",
+            fontSize: "16px",
+            textTransform: "capitalize",
+          },
+          position: "top-right",
+        }
       );
     },
   });
@@ -27,15 +48,41 @@ export const useRegister = () => {
 
 export const useLogin = () => {
   const { mutate, isPending, isError } = useMutation({
-    mutationFn: (credentials: Record<"email" | "password", string>) =>
-      signIn("credentials", { ...credentials, redirect: false }),
-    onSuccess: () => toast("Login Successful!!"),
+    mutationFn: async (credentials: Record<"email" | "password", string>) => {
+      const result = await signIn("credentials", {
+        ...credentials,
+        redirect: false,
+      });
+      if (result?.error) {
+        throw new Error(result.error);
+      }
+      return result;
+    },
+    onSuccess: () => {
+      toast("Login Successful!!", {
+        closeButton: true,
+        style: {
+          background: "green",
+          color: "#fff",
+          fontSize: "16px",
+          textTransform: "capitalize",
+        },
+        position: "top-right",
+      });
+    },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
-      console.log(error?.response?.data?.error);
-      toast(
-        error?.response?.data?.error || "Failed to login. Please try again..."
-      );
+      console.log("Login error:", error?.message);
+      toast(error?.message || "Failed to login. Please try again...", {
+        closeButton: true,
+        style: {
+          background: "red",
+          color: "#fff",
+          fontSize: "16px",
+          textTransform: "capitalize",
+        },
+        position: "top-right",
+      });
     },
   });
   return {
@@ -48,12 +95,33 @@ export const useLogin = () => {
 export const useLogout = () => {
   const { mutate, isPending, isError } = useMutation({
     mutationFn: () => signOut(),
-    onSuccess: () => toast("Logged Out Successfully!!"),
+    onSuccess: () => {
+      toast("Logged Out Successfully!!", {
+        closeButton: true,
+        style: {
+          background: "green",
+          color: "#fff",
+          fontSize: "16px",
+          textTransform: "capitalize",
+        },
+        position: "top-right",
+      });
+    },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       console.log(error?.response?.data?.error);
       toast(
-        error?.response?.data?.error || "Failed to logout. Please try again..."
+        error?.response?.data?.error || "Failed to logout. Please try again...",
+        {
+          closeButton: true,
+          style: {
+            background: "red",
+            color: "#fff",
+            fontSize: "16px",
+            textTransform: "capitalize",
+          },
+          position: "top-right",
+        }
       );
     },
   });
@@ -67,12 +135,33 @@ export const useLogout = () => {
 export const useAuthLogin = () => {
   const { mutate, isPending, isError } = useMutation({
     mutationFn: (provider: string) => signIn(provider, { callbackUrl: "/" }),
-    onSuccess: () => toast("Login Successful!!"),
+    onSuccess: () => {
+      toast("Login Successful!!", {
+        closeButton: true,
+        style: {
+          background: "green",
+          color: "#fff",
+          fontSize: "16px",
+          textTransform: "capitalize",
+        },
+        position: "top-right",
+      });
+    },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       console.log(error?.response?.data?.error);
       toast(
-        error?.response?.data?.error || "Failed to login. Please try again..."
+        error?.response?.data?.error || "Failed to login. Please try again...",
+        {
+          closeButton: true,
+          style: {
+            background: "red",
+            color: "#fff",
+            fontSize: "16px",
+            textTransform: "capitalize",
+          },
+          position: "top-right",
+        }
       );
     },
   });

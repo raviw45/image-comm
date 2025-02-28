@@ -23,7 +23,7 @@ export const authOptions: NextAuthOptions = {
           const user = await User.findOne({ email: credentials.email });
 
           if (!user) {
-            throw new Error("No user found with this email");
+            throw Error("No user found with this email");
           }
 
           const isValid = await bcrypt.compare(
@@ -32,7 +32,7 @@ export const authOptions: NextAuthOptions = {
           );
 
           if (!isValid) {
-            throw new Error("Invalid password");
+            throw Error("Invalid password");
           }
 
           return {
@@ -52,7 +52,6 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       authorization: {
         params: {
-          prompt: "consent",
           access_type: "offline",
           response_type: "code",
         },
