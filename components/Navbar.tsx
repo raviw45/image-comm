@@ -5,7 +5,6 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import { IoMenu, IoClose } from "react-icons/io5";
 import { BsCart3 } from "react-icons/bs";
-import { FiHeart } from "react-icons/fi";
 import { FaClipboardList } from "react-icons/fa";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { MdHistory, MdLogout } from "react-icons/md";
@@ -36,6 +35,38 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
+  };
+
+  const UserLinks = () => {
+    return (
+      <>
+        <DropdownMenuItem asChild>
+          <Link href="/orders" className="flex items-center gap-2">
+            <FaClipboardList className="text-gray-700 text-lg" />
+            Orders
+          </Link>
+        </DropdownMenuItem>
+      </>
+    );
+  };
+
+  const AdminLink = () => {
+    return (
+      <>
+        <DropdownMenuItem asChild>
+          <Link href="/create" className="flex items-center gap-2">
+            <IoMdAddCircleOutline className="text-gray-700 text-lg" />
+            Create
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/sell-history" className="flex items-center gap-2">
+            <MdHistory className="text-gray-700 text-lg" />
+            Sell History
+          </Link>
+        </DropdownMenuItem>
+      </>
+    );
   };
 
   return (
@@ -69,6 +100,11 @@ const Navbar = () => {
 
         {/* User Avatar & Dropdown Menu */}
         <div className="flex flex-row justify-center items-center md:gap-6 gap-2">
+          {session?.user?.role !== "admin" && (
+            <Link href="/cart" className="flex items-center gap-2">
+              <BsCart3 className="text-gray-700 text-2xl font-bold" />
+            </Link>
+          )}
           {!session ? (
             <>
               <Link
@@ -98,39 +134,11 @@ const Navbar = () => {
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-40 m-4 ">
-                <DropdownMenuItem asChild>
-                  <Link href="/cart" className="flex items-center gap-2">
-                    <BsCart3 className="text-gray-700 text-lg" />
-                    Cart
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/wishlist" className="flex items-center gap-2">
-                    <FiHeart className="text-gray-700 text-lg" />
-                    Wishlist
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/orders" className="flex items-center gap-2">
-                    <FaClipboardList className="text-gray-700 text-lg" />
-                    Orders
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/create" className="flex items-center gap-2">
-                    <IoMdAddCircleOutline className="text-gray-700 text-lg" />
-                    Create
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link
-                    href="/sell-history"
-                    className="flex items-center gap-2"
-                  >
-                    <MdHistory className="text-gray-700 text-lg" />
-                    Sell History
-                  </Link>
-                </DropdownMenuItem>
+                {session?.user?.role === "admin" ? (
+                  <AdminLink />
+                ) : (
+                  <UserLinks />
+                )}
                 <DropdownMenuItem asChild>
                   {isLogoutPending ? (
                     <Spinner />
