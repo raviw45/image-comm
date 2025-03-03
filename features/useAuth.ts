@@ -2,39 +2,20 @@ import { IUser } from "@/models/User";
 import { registerApi } from "@/services/authApi";
 import { useMutation } from "@tanstack/react-query";
 import { signIn, signOut } from "next-auth/react";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 
 export const useRegister = () => {
   const { mutate, isPending, isError } = useMutation({
     mutationFn: (data: IUser) => registerApi(data),
     onSuccess: () => {
-      toast("User registered successfully!!", {
-        closeButton: true,
-        style: {
-          background: "green",
-          color: "#fff",
-          fontSize: "16px",
-          textTransform: "capitalize",
-        },
-        position: "top-right",
-      });
+      toast.success("User registered successfully!!");
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       console.log(error?.response?.data?.error);
-      toast(
+      toast.error(
         error?.response?.data?.error ||
-          "Failed to register user. Please try again.",
-        {
-          closeButton: true,
-          style: {
-            background: "red",
-            color: "#fff",
-            fontSize: "16px",
-            textTransform: "capitalize",
-          },
-          position: "top-right",
-        }
+          "Failed to register user. Please try again."
       );
     },
   });
@@ -59,30 +40,12 @@ export const useLogin = () => {
       return result;
     },
     onSuccess: () => {
-      toast("Login Successful!!", {
-        closeButton: true,
-        style: {
-          background: "green",
-          color: "#fff",
-          fontSize: "16px",
-          textTransform: "capitalize",
-        },
-        position: "top-right",
-      });
+      toast.success("Login Successful!!");
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       console.log("Login error:", error?.message);
-      toast(error?.message || "Failed to login. Please try again...", {
-        closeButton: true,
-        style: {
-          background: "red",
-          color: "#fff",
-          fontSize: "16px",
-          textTransform: "capitalize",
-        },
-        position: "top-right",
-      });
+      toast.error(error?.message || "Failed to login. Please try again...");
     },
   });
   return {
@@ -96,32 +59,13 @@ export const useLogout = () => {
   const { mutate, isPending, isError } = useMutation({
     mutationFn: () => signOut(),
     onSuccess: () => {
-      toast("Logged Out Successfully!!", {
-        closeButton: true,
-        style: {
-          background: "green",
-          color: "#fff",
-          fontSize: "16px",
-          textTransform: "capitalize",
-        },
-        position: "top-right",
-      });
+      toast.success("Logged Out Successfully!!");
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       console.log(error?.response?.data?.error);
-      toast(
-        error?.response?.data?.error || "Failed to logout. Please try again...",
-        {
-          closeButton: true,
-          style: {
-            background: "red",
-            color: "#fff",
-            fontSize: "16px",
-            textTransform: "capitalize",
-          },
-          position: "top-right",
-        }
+      toast.error(
+        error?.response?.data?.error || "Failed to logout. Please try again..."
       );
     },
   });
@@ -136,32 +80,13 @@ export const useAuthLogin = () => {
   const { mutate, isPending, isError } = useMutation({
     mutationFn: (provider: string) => signIn(provider, { callbackUrl: "/" }),
     onSuccess: () => {
-      toast("Login Successful!!", {
-        closeButton: true,
-        style: {
-          background: "green",
-          color: "#fff",
-          fontSize: "16px",
-          textTransform: "capitalize",
-        },
-        position: "top-right",
-      });
+      toast.success("Login Successful!!");
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       console.log(error?.response?.data?.error);
-      toast(
-        error?.response?.data?.error || "Failed to login. Please try again...",
-        {
-          closeButton: true,
-          style: {
-            background: "red",
-            color: "#fff",
-            fontSize: "16px",
-            textTransform: "capitalize",
-          },
-          position: "top-right",
-        }
+      toast.error(
+        error?.response?.data?.error || "Failed to login. Please try again..."
       );
     },
   });

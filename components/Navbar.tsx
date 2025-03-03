@@ -124,17 +124,23 @@ const Navbar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger className="focus:outline-none">
                 <Avatar className="border-2 border-gray-700 cursor-pointer">
-                  <AvatarImage
-                    src={session?.user?.image as string}
-                    alt="User Image"
-                    width={30}
-                    height={30}
-                  />
-                  <AvatarFallback className="text-xl font-bold text-black">
-                    {session?.user?.username?.slice(0, 1)}
-                  </AvatarFallback>
+                  {session?.user?.image ? (
+                    <AvatarImage
+                      src={session.user.image}
+                      alt="User Image"
+                      width={30}
+                      height={30}
+                    />
+                  ) : (
+                    <AvatarFallback className="text-xl font-bold text-black">
+                      {session?.user?.name
+                        ? session.user.name.charAt(0).toUpperCase()
+                        : session?.user?.username?.slice(0, 1)}
+                    </AvatarFallback>
+                  )}
                 </Avatar>
               </DropdownMenuTrigger>
+
               <DropdownMenuContent className="w-40 m-4 ">
                 {session?.user?.role === "admin" ? (
                   <AdminLink />
