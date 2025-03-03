@@ -6,8 +6,7 @@ import { Button } from "./ui/button";
 import { IoMenu, IoClose } from "react-icons/io5";
 import { BsCart3 } from "react-icons/bs";
 import { FaClipboardList } from "react-icons/fa";
-import { IoMdAddCircleOutline } from "react-icons/io";
-import { MdHistory, MdLogout } from "react-icons/md";
+import { MdLogout } from "react-icons/md";
 import { useSession } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -50,24 +49,7 @@ const Navbar = () => {
     );
   };
 
-  const AdminLink = () => {
-    return (
-      <>
-        <DropdownMenuItem asChild>
-          <Link href="/create" className="flex items-center gap-2">
-            <IoMdAddCircleOutline className="text-gray-700 text-lg" />
-            Create
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/sell-history" className="flex items-center gap-2">
-            <MdHistory className="text-gray-700 text-lg" />
-            Sell History
-          </Link>
-        </DropdownMenuItem>
-      </>
-    );
-  };
+  if (session?.user?.role === "admin") return;
 
   return (
     <nav className="w-screen fixed z-50 h-20 bg-white">
@@ -100,11 +82,10 @@ const Navbar = () => {
 
         {/* User Avatar & Dropdown Menu */}
         <div className="flex flex-row justify-center items-center md:gap-6 gap-2">
-          {session?.user?.role !== "admin" && (
-            <Link href="/cart" className="flex items-center gap-2">
-              <BsCart3 className="text-gray-700 text-2xl font-bold" />
-            </Link>
-          )}
+          <Link href="/cart" className="flex items-center gap-2">
+            <BsCart3 className="text-gray-700 text-2xl font-bold" />
+          </Link>
+
           {!session ? (
             <>
               <Link
@@ -142,11 +123,7 @@ const Navbar = () => {
               </DropdownMenuTrigger>
 
               <DropdownMenuContent className="w-40 m-4 ">
-                {session?.user?.role === "admin" ? (
-                  <AdminLink />
-                ) : (
-                  <UserLinks />
-                )}
+                <UserLinks />
                 <DropdownMenuItem asChild>
                   {isLogoutPending ? (
                     <Spinner />

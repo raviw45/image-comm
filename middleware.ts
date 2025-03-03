@@ -2,19 +2,26 @@ import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 
 export default withAuth(
-  function middleware() {
+  function middleware(req) {
+    const { token } = req.nextauth;
+    const { pathname } = req.nextUrl;
+
+    // Ensure admin users are not forced to always stay at /admin
+    if (token?.role === "admin" && pathname === "/") {
+      return NextResponse.redirect(new URL("/admin", req.url));
+    }
+
     return NextResponse.next();
   },
   {
     callbacks: {
       authorized: ({ token, req }) => {
         const { pathname } = req.nextUrl;
-        // Allow webhook endpoint
-        if (pathname.startsWith("/api/webhook")) {
-          return true;
-        }
 
-        // Allow auth-related routes
+        // Allow webhook endpoint
+        if (pathname.startsWith("/api/webhook")) return true;
+
+        // Allow authentication-related routes
         if (
           pathname.startsWith("/api/auth") ||
           pathname === "/login" ||
@@ -23,7 +30,7 @@ export default withAuth(
           return true;
         }
 
-        // Public routes
+        // Publicly accessible routes
         if (
           pathname === "/" ||
           pathname.startsWith("/api/products") ||
@@ -32,10 +39,12 @@ export default withAuth(
           return true;
         }
 
-        // Admin routes require admin role
+        // Allow access to /admin only for admins
         if (pathname.startsWith("/admin")) {
           return token?.role === "admin";
         }
+
+        // Default: allow access if the user has a token
         return !!token;
       },
     },
@@ -43,14 +52,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
-     */
-    "/((?!_next/static|_next/image|favicon.ico|public/).*)",
-  ],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|public/).*)"],
 };
