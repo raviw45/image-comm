@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 const Header = () => {
   const { data: session } = useSession();
   return (
-    <header className="flex justify-end px-8 py-2">
+    <header className="flex fixed z-20 shadow-md w-full bg-white justify-end px-8 py-2">
       <Avatar className="border-2 border-gray-700 cursor-pointer">
         {session?.user?.image ? (
           <AvatarImage

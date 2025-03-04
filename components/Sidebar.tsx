@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Germania_One } from "next/font/google";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   BiHome,
   BiShoppingBag,
@@ -25,7 +26,6 @@ const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { logout, isLogoutPending } = useLogout();
 
-  // Prevent body scrolling when sidebar is open
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add("overflow-hidden");
@@ -35,7 +35,7 @@ const Sidebar = () => {
   }, [isOpen]);
 
   return (
-    <div className="relative overflow-x-hidden">
+    <div className="relative z-50 overflow-x-hidden">
       {/* Mobile Toggle Button */}
       <button
         className="md:hidden fixed p-4 text-3xl text-gray-700"
@@ -79,7 +79,7 @@ const Sidebar = () => {
 
         {/* Navigation Menu */}
         <ul className="flex flex-col py-4">
-          <SidebarItem href="/" icon={<BiHome />} label="Dashboard" />
+          <SidebarItem href="/admin" icon={<BiHome />} label="Dashboard" />
           <SidebarItem
             href="/admin/shopping"
             icon={<BiShoppingBag />}
@@ -129,13 +129,24 @@ const SidebarItem = ({
   label: string;
   badge?: string;
 }) => {
+  const pathname = usePathname();
+  const isActive = pathname === href;
+
   return (
     <li>
       <Link
         href={href}
-        className="flex flex-row items-center h-12 px-4 transform hover:translate-x-2 transition-all ease-in duration-200 text-gray-500 hover:text-gray-800"
+        className={`flex flex-row items-center h-12 px-4 transform hover:translate-x-2 transition-all ease-in duration-200 ${
+          isActive
+            ? "bg-gray-200 text-gray-900 font-semibold"
+            : "text-gray-500 hover:text-gray-800"
+        }`}
       >
-        <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
+        <span
+          className={`inline-flex items-center justify-center h-12 w-12 text-lg ${
+            isActive ? "text-gray-900" : "text-gray-400"
+          }`}
+        >
           {icon}
         </span>
         <span className="text-sm font-medium">{label}</span>
