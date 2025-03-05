@@ -1,5 +1,3 @@
-import { ImageVariant } from "@/types/product.types";
-
 export const convertToFormData = (values: any) => {
   const formData = new FormData();
 
@@ -9,6 +7,9 @@ export const convertToFormData = (values: any) => {
   if (values.image instanceof File) {
     formData.append("image", values.image);
   }
+  const containsValue = Array.isArray(values.variants);
+  const variants = [...values.variants];
+
   values.variants.forEach((variant: any, index: any) => {
     formData.append(`variants[${index}][name]`, variant.name);
     formData.append(`variants[${index}][price]`, variant.price.toString());

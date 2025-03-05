@@ -62,13 +62,7 @@ const ProductForm: React.FC = () => {
   });
 
   const onSubmit = async (values: ProductFormData) => {
-    const formData = convertToFormData(values);
-
-    for (const pair of formData.entries()) {
-      console.log(pair[0], pair[1]);
-    }
-
-    addProduct(formData, {
+    addProduct(values, {
       onSuccess: () => {
         form.reset();
         setImagePreview("");
@@ -84,11 +78,7 @@ const ProductForm: React.FC = () => {
         Add New Product
       </h2>
       <Form {...form}>
-        <form
-          encType="multipart/form-data"
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-6"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           {/* Product Name */}
           <FormField
             control={form.control}

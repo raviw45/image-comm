@@ -1,17 +1,11 @@
-import { ProductFormData } from "@/components/admin/CreateProductForm";
 import { authOptions } from "@/lib/auth";
 import connectToDatabase from "@/lib/db";
 import Product from "@/models/Product";
 import { productSchema } from "@/schema/product.schema";
-import { IProduct } from "@/types/product.types";
-import cloudinaryUpload from "@/utils/cloudinaryUpload";
+import cloudinaryDelete from "@/utils/cloudinaryDelete";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
-async function fileToBuffer(file: File): Promise<Buffer> {
-  const arrayBuffer = await file.arrayBuffer();
-  return Buffer.from(arrayBuffer);
-}
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
@@ -25,37 +19,130 @@ export async function POST(req: NextRequest) {
     }
 
     await connectToDatabase();
-    const body = await req.formData();
-
-    const bodyData = {
-      name: body.get("name") as string,
-      description: body.get("description") as string,
-      image: body.get("image") as File,
-      variants: body.get("variants"),
-    };
-
-    const parseResult = productSchema.safeParse(bodyData);
-
+    const body = await req.json();
+    const parseResult = productSchema.safeParse(body);
     if (!parseResult.success) {
-      console.log(parseResult?.error.issues[0]);
       return NextResponse.json(
         { error: parseResult?.error.issues[0].message },
         { status: 403 }
       );
     }
+    const newProduct = await Product.create({ ...parseResult.data });
+    return NextResponse.json(
+      { message: "Product Added!!", newProduct },
+      { status: 201 }
+    );
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}
 
-    const imageBuffer = await fileToBuffer(parseResult?.data?.image as File);
+export async function GET(req: NextRequest) {
+  try {
+    await connectToDatabase();
+    const productId = req?.nextUrl?.searchParams?.get("id");
+    if (productId) {
+      const product = await Product.findById(productId);
+      if (!product) {
+        return NextResponse.json(
+          { error: "Product not found" },
+          { status: 404 }
+        );
+      }
+      return NextResponse.json(product, { status: 200 });
+    }
+    const products = await Product.find({});
+    return NextResponse.json(products, { status: 200 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}
 
-    // // upload the image on the cloudinary
-    const url = await cloudinaryUpload(imageBuffer, "image-comm");
-    const cloudinary_url = url?.secure_url;
+export async function DELETE(req: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session || session?.user?.role !== "admin") {
+      return NextResponse.json(
+        { error: "Unauthorized Access" },
+        { status: 401 }
+      );
+    }
+    await connectToDatabase();
+    const productId = req?.nextUrl?.searchParams?.get("id");
+    if (!productId) {
+      return NextResponse.json(
+        { error: "Product ID is required" },
+        { status: 400 }
+      );
+    }
+    const product = await Product.findById(productId);
+    if (!product) {
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    }
+    // Delete Image from cloudinary
+    if (product.image) {
+      await cloudinaryDelete(product?.image);
+    }
 
-    const newProduct = await Product.create({
-      ...parseResult.data,
-      image: cloudinary_url,
-    });
-    console.log(newProduct);
-    return NextResponse.json({ message: "Product Added!!" }, { status: 201 });
+    await Product.findByIdAndDelete(productId);
+    return NextResponse.json(
+      { message: "Product deleted successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(req: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session || session?.user?.role !== "admin") {
+      return NextResponse.json(
+        { error: "Unauthorized Access" },
+        { status: 401 }
+      );
+    }
+    const body = await req.json();
+    const variants = body.variants;
+    const productId = req?.nextUrl?.searchParams?.get("id");
+    if (!productId) {
+      return NextResponse.json(
+        { error: "Product ID is required" },
+        { status: 400 }
+      );
+    }
+
+    const product = await Product.findById(productId);
+    if (!product) {
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    }
+    // update product
+    if (product.variants.length <= 1) {
+      return NextResponse.json(
+        { error: "At least one variant is required" },
+        { status: 403 }
+      );
+    }
+    product.variants = variants;
+    await product.save();
+
+    return NextResponse.json(
+      { error: "Image variant deleted" },
+      { status: 200 }
+    );
   } catch (error) {
     console.log(error);
     return NextResponse.json(

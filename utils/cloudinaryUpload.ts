@@ -1,16 +1,18 @@
+"use server";
+
 import cloudinary from "./cloudinary";
 
 export type CloudinaryUploadResult = {
   secure_url: string;
   public_id: string;
 };
-
 const cloudinaryUpload = async (
-  buffer: Buffer,
+  base64File: string,
   folder: string
 ): Promise<CloudinaryUploadResult> => {
   return new Promise<CloudinaryUploadResult>((resolve, reject) => {
-    const uploadStream = cloudinary.uploader.upload_stream(
+    cloudinary.uploader.upload(
+      base64File,
       {
         resource_type: "image",
         folder: folder,
@@ -18,12 +20,11 @@ const cloudinaryUpload = async (
       (error: any, result: any) => {
         if (error) {
           console.log(error);
-          return reject("Error while uploading image to cloudinary");
+          return reject("Error while uploading image to Cloudinary");
         }
         resolve(result as CloudinaryUploadResult);
       }
     );
-    uploadStream.end(buffer);
   });
 };
 
