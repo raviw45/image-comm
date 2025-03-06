@@ -1,4 +1,3 @@
-import { ProductFormData } from "@/components/admin/CreateProductForm";
 import {
   addProduct,
   deleteProductById,
@@ -6,13 +5,8 @@ import {
   getProductById,
   getProducts,
 } from "@/services/productApi";
-import { ImageVariant } from "@/types/product.types";
-import {
-  QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { ImageVariant, ProductFormData } from "@/types/product.types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
 export const useAddProduct = () => {

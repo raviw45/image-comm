@@ -1,31 +1,5 @@
+import { ImageVariantType, IOrder } from "@/types/product.types";
 import mongoose, { Schema, model, models } from "mongoose";
-import { ImageVariant, ImageVariantType } from "./Product";
-
-interface PopulatedUser {
-  _id: mongoose.Types.ObjectId;
-  email: string;
-}
-
-interface PopulatedProduct {
-  _id: mongoose.Types.ObjectId;
-  name: string;
-  imageUrl: string;
-}
-
-export interface IOrder {
-  _id?: mongoose.Types.ObjectId;
-  userId: mongoose.Types.ObjectId | PopulatedUser;
-  productId: mongoose.Types.ObjectId | PopulatedProduct;
-  variant: ImageVariant;
-  razorpayOrderId: string;
-  razorpayPaymentId?: string;
-  status: "pending" | "completed" | "cancelled";
-  amount: number;
-  downloadUrl?: string;
-  previewUrl?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
 
 const orderSchema = new Schema<IOrder>(
   {

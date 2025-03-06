@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useForm, useFieldArray, Controller } from "react-hook-form";
-import { z } from "zod";
+import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -23,13 +22,10 @@ import {
 } from "../ui/select";
 import { Germania_One } from "next/font/google";
 import { Textarea } from "../ui/textarea";
-import { ImageVariantType } from "@/types/product.types";
+import { ImageVariantType, ProductFormData } from "@/types/product.types";
 import { productSchema } from "@/schema/product.schema";
-import { convertToFormData } from "@/utils/convertToFormdata";
 import { useAddProduct } from "@/features/useProduct";
 import Spinner from "../Spinner";
-
-export type ProductFormData = z.infer<typeof productSchema>;
 
 const germania = Germania_One({
   weight: "400",

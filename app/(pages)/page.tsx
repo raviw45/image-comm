@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import AllProducts from "@/components/user/AllProducts";
 
 const Page = () => {
   const { data: session, status } = useSession();
@@ -18,7 +19,11 @@ const Page = () => {
     }
   }, [session, status, router]);
 
-  return <div className="pt-20">page</div>;
+  return (
+    <div className="pt-20 px-2 overflow-x-hidden">
+      <AllProducts />
+    </div>
+  );
 };
 
 export default Page;

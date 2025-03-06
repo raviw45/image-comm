@@ -1,4 +1,6 @@
+import { addToCartSchema, productSchema } from "@/schema/product.schema";
 import mongoose from "mongoose";
+import { z } from "zod";
 export const IMAGE_VARIANTS = {
   SQUARE: {
     type: "SQUARE",
@@ -35,3 +37,40 @@ export interface IProduct {
   image: string | File;
   variants: ImageVariant[];
 }
+export type ProductFormData = z.infer<typeof productSchema>;
+// order types
+interface PopulatedUser {
+  _id: mongoose.Types.ObjectId;
+  email: string;
+}
+
+interface PopulatedProduct {
+  _id: mongoose.Types.ObjectId;
+  name: string;
+  imageUrl: string;
+}
+
+export interface IOrder {
+  _id?: mongoose.Types.ObjectId;
+  userId: mongoose.Types.ObjectId | PopulatedUser;
+  productId: mongoose.Types.ObjectId | PopulatedProduct;
+  variant: ImageVariant;
+  razorpayOrderId: string;
+  razorpayPaymentId?: string;
+  status: "pending" | "completed" | "cancelled";
+  amount: number;
+  downloadUrl?: string;
+  previewUrl?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+// cart types
+export interface ICart {
+  _id?: mongoose.Types.ObjectId;
+  userId: mongoose.Types.ObjectId | PopulatedUser;
+  productId: mongoose.Types.ObjectId | PopulatedProduct;
+  variant: ImageVariant;
+}
+
+export type CartData = z.infer<typeof addToCartSchema>;

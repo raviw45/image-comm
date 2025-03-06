@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Germania_One } from "next/font/google";
 import Link from "next/link";
 import { Button } from "./ui/button";
@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useLogout } from "@/features/useAuth";
 import Spinner from "./Spinner";
+import { useGetCartItems } from "@/features/useCart";
 
 const germania = Germania_One({
   weight: "400",
@@ -27,6 +28,12 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { data: session } = useSession();
   const { logout, isLogoutPending } = useLogout();
+  const { cartItems } = useGetCartItems();
+  const [cartCount, setCartCount] = useState<number>(0);
+
+  useEffect(() => {
+    setCartCount(cartItems?.length || 0);
+  }, [cartItems]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -55,11 +62,12 @@ const Navbar = () => {
     <nav className="w-screen fixed z-50 h-20 bg-white">
       <div className="w-full h-full flex justify-between items-center md:px-10 px-2">
         <div className="flex flex-row gap-8">
-          <h2
+          <Link
+            href={"/"}
             className={`md:text-[38px] text-[30px] text-[#d64e9d] font-bold ${germania.className}`}
           >
             mediastock
-          </h2>
+          </Link>
           <ul className="md:flex hidden flex-row gap-6 justify-center items-center">
             <li>
               <Link
@@ -81,9 +89,14 @@ const Navbar = () => {
         </div>
 
         {/* User Avatar & Dropdown Menu */}
-        <div className="flex flex-row justify-center items-center md:gap-6 gap-2">
-          <Link href="/cart" className="flex items-center gap-2">
+        <div className="flex flex-row justify-center items-center md:gap-6 gap-4">
+          <Link href="/cart" className="relative flex items-center">
             <BsCart3 className="text-gray-700 text-2xl font-bold" />
+            {cartCount > 0 && (
+              <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                {cartCount}
+              </span>
+            )}
           </Link>
 
           {!session ? (
