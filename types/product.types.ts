@@ -1,4 +1,8 @@
-import { addToCartSchema, productSchema } from "@/schema/product.schema";
+import {
+  addToCartSchema,
+  addVoucherFormSchema,
+  productSchema,
+} from "@/schema/product.schema";
 import mongoose from "mongoose";
 import { z } from "zod";
 export const IMAGE_VARIANTS = {
@@ -64,6 +68,18 @@ export interface IOrder {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export interface IVoucher {
+  _id?: mongoose.Types.ObjectId;
+  name: string;
+  voucherCount: number;
+  code: string;
+  discountAmount: number;
+  expiryDate: Date;
+  isActive?: boolean;
+}
+
+export type AddVoucherFormData = z.infer<typeof addVoucherFormSchema>;
 
 // cart types
 export interface ICart {

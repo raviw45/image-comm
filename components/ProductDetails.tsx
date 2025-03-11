@@ -13,6 +13,7 @@ import { ImageVariant } from "@/types/product.types";
 import Spinner from "./Spinner";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import { getAspectRatioClass } from "@/utils/quicker";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -27,19 +28,6 @@ const ProductDetails = () => {
   );
 
   if (isProductLoading) return <Loader />;
-
-  const getAspectRatioClass = (type: string) => {
-    switch (type) {
-      case "SQUARE":
-        return "aspect-[1/1]";
-      case "PORTRAIT":
-        return "aspect-[3/4]";
-      case "WIDE":
-        return "aspect-[16/9]";
-      default:
-        return "aspect-[4/3]";
-    }
-  };
 
   const handleDeleteVariant = (indexToRemove: number) => {
     console.log(`Delete variant at index: ${indexToRemove}`);

@@ -6,7 +6,7 @@ import Loader from "../ui/loader";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { FaTrash } from "react-icons/fa";
+import { FaShippingFast, FaTrash } from "react-icons/fa";
 import Link from "next/link";
 import Spinner from "../Spinner";
 import {
@@ -16,6 +16,7 @@ import {
   DialogFooter,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { getAspectRatioClass } from "@/utils/quicker";
 
 const AllCartItems = () => {
   const { cartItems, isCartItemsLoading } = useGetCartItems();
@@ -48,25 +49,32 @@ const AllCartItems = () => {
   };
 
   return (
-    <section className="max-w-6xl mx-auto p-6 flex flex-col lg:flex-row gap-6 overflow-hidden">
+    <section className="max-w-6xl mx-auto md:p-6 p-2 flex flex-col lg:flex-row gap-6 overflow-hidden">
       {/* Cart Items (Scrollable) */}
-      <div className="flex-1 overflow-y-auto h-[75vh] p-4 space-y-4">
+      <div className="flex-1 md:overflow-y-auto md:h-[75vh] h-auto md:p-4 space-y-4">
         {cartItems.length === 0 ? (
           <p className="text-center text-gray-500 text-lg">
             Your cart is empty.
           </p>
         ) : (
           cartItems.map((item: any, index: number) => (
-            <div key={index} className="flex items-center gap-4 border-b pb-4">
+            <div
+              key={index}
+              className="flex md:flex-row flex-col items-center gap-4 border-b pb-4"
+            >
               {/* Product Image */}
-              <Image
-                src={item?.productId?.image}
-                alt={item?.productId?.name}
-                width={100}
-                height={100}
-                quality={100}
-                className="rounded-lg object-cover"
-              />
+              <div
+                className={`relative w-32 ${getAspectRatioClass(
+                  item?.variant.type
+                )}`}
+              >
+                <Image
+                  src={item?.productId?.image}
+                  alt={item?.productId?.name}
+                  fill
+                  className="object-cover rounded-lg"
+                />
+              </div>
 
               {/* Product Details */}
               <div className="flex-1">
@@ -90,19 +98,24 @@ const AllCartItems = () => {
               </div>
 
               {/* Remove Button */}
-              <Button
-                variant="destructive"
-                size="icon"
-                onClick={() => handleDeleteClick(item._id)}
-              >
-                <FaTrash className="text-white" />
-              </Button>
+              <div className="md:space-x-4 space-x-2 space-y-4">
+                <Button className="bg-orange-600 hover:shadow-lg hover:bg-orange-600/85 duration-200 ease-in-out">
+                  <FaShippingFast size={20} />
+                  Buy Now
+                </Button>
+                <Button
+                  variant="destructive"
+                  onClick={() => handleDeleteClick(item._id)}
+                >
+                  <FaTrash className="text-white" />
+                  Remove from Cart
+                </Button>
+              </div>
             </div>
           ))
         )}
       </div>
-
-      {/* Order Summary (Fixed) */}
+      {/* Order Summary (Fixed)
       <div className="w-full lg:w-1/3 p-6 self-start sticky top-6">
         <h2 className="text-lg font-semibold text-gray-800">Order Summary</h2>
         <div className="mt-2 space-y-2">
@@ -112,8 +125,7 @@ const AllCartItems = () => {
           </div>
         </div>
         <Button className="mt-2 text-white">Pay Now</Button>
-      </div>
-
+      </div> */}
       {/* Delete Confirmation Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>

@@ -1,5 +1,4 @@
-import { ProductFormData } from "@/components/admin/CreateProductForm";
-import { ImageVariant } from "@/types/product.types";
+import { ImageVariant, ProductFormData } from "@/types/product.types";
 import cloudinaryUpload from "@/utils/cloudinaryUpload";
 import { fileToBase64 } from "@/utils/quicker";
 import axios from "axios";

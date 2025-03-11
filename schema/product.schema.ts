@@ -1,3 +1,4 @@
+import { IVoucher } from "@/types/product.types";
 import { z } from "zod";
 export const productSchema = z.object({
   name: z.string().min(1, "Product name is required"),
@@ -29,4 +30,13 @@ export const addToCartSchema = z.object({
     .refine((data) => data.type && data.license, {
       message: "Variant is required",
     }),
+});
+
+export const addVoucherFormSchema = z.object({
+  name: z.string().min(1, "Voucher Name is required"),
+  voucherCount: z.number().min(1, "Voucher Count is required"),
+  code: z.string().min(1, "Voucher Code is required"),
+  discountAmount: z.number().min(0, "Discount Amount is required"),
+  expiryDate: z.date().min(new Date(), "Expiry Date must be in the future"),
+  isActive: z.boolean().optional(),
 });

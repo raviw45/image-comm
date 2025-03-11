@@ -14,6 +14,7 @@ import {
   BiX,
   BiLayerPlus,
 } from "react-icons/bi";
+import { LuTicketCheck } from "react-icons/lu";
 import { useLogout } from "@/features/useAuth";
 import Spinner from "./Spinner";
 
@@ -90,7 +91,11 @@ const Sidebar = () => {
             icon={<BiLayerPlus />}
             label="Create"
           />
-          <SidebarItem href="/profile" icon={<BiUser />} label="Profile" />
+          <SidebarItem
+            href="/admin/voucher"
+            icon={<LuTicketCheck />}
+            label="Voucher"
+          />
           <SidebarItem
             href="/admin/notifications"
             icon={<BiBell />}

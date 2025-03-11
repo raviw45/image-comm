@@ -24,7 +24,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.className} antialiased`}>
         <Providers>
-          <section className="flex min-h-screen">
+          <section className="flex min-h-screen overflow-x-hidden">
             {/* Sidebar */}
             <Sidebar />
 
