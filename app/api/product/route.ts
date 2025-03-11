@@ -1,5 +1,6 @@
 import { authOptions } from "@/lib/auth";
 import connectToDatabase from "@/lib/db";
+import Cart from "@/models/Cart";
 import Product from "@/models/Product";
 import { productSchema } from "@/schema/product.schema";
 import cloudinaryDelete from "@/utils/cloudinaryDelete";
@@ -93,6 +94,9 @@ export async function DELETE(req: NextRequest) {
     }
 
     await Product.findByIdAndDelete(productId);
+
+    // Remove product from all carts
+    await Cart.deleteMany({ productId });
     return NextResponse.json(
       { message: "Product deleted successfully" },
       { status: 200 }

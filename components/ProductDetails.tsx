@@ -13,7 +13,18 @@ import { ImageVariant } from "@/types/product.types";
 import Spinner from "./Spinner";
 import toast from "react-hot-toast";
 import Link from "next/link";
-import { getAspectRatioClass } from "@/utils/quicker";
+const getAspectRatioClass = (type: string) => {
+  switch (type) {
+    case "SQUARE":
+      return "aspect-[1/1]";
+    case "PORTRAIT":
+      return "aspect-[3/4]";
+    case "WIDE":
+      return "aspect-[16/9]";
+    default:
+      return "aspect-[4/3]";
+  }
+};
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -52,7 +63,7 @@ const ProductDetails = () => {
   };
 
   return (
-    <section className="p-6 mx-auto">
+    <section className="md:p-6 p-2 mx-auto">
       {/* Back Button */}
       <button
         onClick={() => router.back()}
@@ -103,7 +114,7 @@ const ProductDetails = () => {
               return (
                 <div
                   key={index}
-                  className="flex items-center gap-4 bg-gray-100 p-4 rounded-lg shadow-md"
+                  className="flex flex-wrap items-center gap-4 bg-gray-100 md:p-4 p-2 rounded-lg shadow-md"
                 >
                   <div
                     className={`relative w-32 ${getAspectRatioClass(
@@ -137,7 +148,7 @@ const ProductDetails = () => {
                         : "Delete"}
                     </Button>
                   ) : (
-                    <div className="flex gap-4">
+                    <div className="flex flex-wrap justify-center gap-4">
                       {isInCart ? (
                         <Link href="/cart">
                           <Button className="bg-orange-400 hover:shadow-lg hover:bg-orange-400/85 duration-200 ease-in-out">

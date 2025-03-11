@@ -64,13 +64,15 @@ export async function GET() {
     }
 
     await connectToDatabase();
-    const cartItems = await Cart.find({ userId: session?.user?.id })
+    let cartItems = await Cart.find({ userId: session?.user?.id })
       .populate({
         path: "productId",
         select: "name image description ",
         options: { strictPopulate: false },
       })
       .lean();
+    // Filter out cart items where productId is null (product was deleted)
+    cartItems = cartItems.filter((item) => item.productId !== null);
     return NextResponse.json(cartItems, { status: 200 });
   } catch (err) {
     console.error(err);

@@ -16,7 +16,19 @@ import {
   DialogFooter,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { getAspectRatioClass } from "@/utils/quicker";
+
+const getAspectRatioClass = (type: string) => {
+  switch (type) {
+    case "SQUARE":
+      return "aspect-[1/1]";
+    case "PORTRAIT":
+      return "aspect-[3/4]";
+    case "WIDE":
+      return "aspect-[16/9]";
+    default:
+      return "aspect-[4/3]";
+  }
+};
 
 const AllCartItems = () => {
   const { cartItems, isCartItemsLoading } = useGetCartItems();

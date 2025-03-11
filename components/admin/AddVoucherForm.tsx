@@ -36,27 +36,21 @@ const AddVoucherForm: React.FC<AddVoucherFormProps> = ({
   const form = useForm<AddVoucherFormData>({
     resolver: zodResolver(addVoucherFormSchema),
     defaultValues: {
-      name: "",
-      code: "",
-      discountAmount: undefined,
-      expiryDate: undefined,
-      voucherCount: undefined,
-      isActive: true,
+      name: voucher?.name ? voucher.name : "",
+      code: voucher?.code ? voucher.code : "",
+      discountAmount: voucher?.discountAmount
+        ? Number(voucher.discountAmount)
+        : undefined,
+      expiryDate: voucher?.expiryDate
+        ? new Date(voucher.expiryDate)
+        : undefined,
+      voucherCount: voucher?.voucherCount
+        ? Number(voucher.voucherCount)
+        : undefined,
+      isActive: voucher?.isActive ? voucher.isActive : true,
     },
+    shouldUnregister: false,
   });
-
-  useEffect(() => {
-    if (voucher) {
-      form.reset({
-        name: voucher.name,
-        code: voucher.code,
-        discountAmount: voucher.discountAmount,
-        expiryDate: new Date(voucher.expiryDate),
-        voucherCount: voucher.voucherCount,
-        isActive: voucher.isActive,
-      });
-    }
-  }, [voucher, form]);
 
   const onSubmit = (values: AddVoucherFormData) => {
     if (voucher) {
@@ -84,11 +78,11 @@ const AddVoucherForm: React.FC<AddVoucherFormProps> = ({
 
   return (
     <div className="w-full  flex justify-center items-center flex-col md:p-2 md:space-y-4 space-y-0 rounded-md bg-white">
-      <h2
+      {/* <h2
         className={`md:text-[38px] text-center text-[16px] text-[#d64e9d] font-bold ${germania.className}`}
       >
         {voucher ? "Edit Voucher/Coupon" : "Add New Voucher/Coupon"}
-      </h2>
+      </h2> */}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -107,6 +101,7 @@ const AddVoucherForm: React.FC<AddVoucherFormProps> = ({
                     </FormLabel>
                     <FormControl>
                       <Input
+                        autoFocus
                         {...field}
                         placeholder="Enter Voucher name"
                         className="w-full md:text-md text-xs"
