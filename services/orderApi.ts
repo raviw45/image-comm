@@ -1,4 +1,4 @@
-import { AddVoucherFormData, IVoucher } from "@/types/product.types";
+import { AddVoucherFormData, IAddOrder, IVoucher } from "@/types/product.types";
 import axios from "axios";
 
 export const addVoucher = async (values: AddVoucherFormData) => {
@@ -18,5 +18,25 @@ export const deleteVoucher = async (id: string) => {
 
 export const updateVoucher = async (values: IVoucher) => {
   const response = await axios.put(`/api/voucher?id=${values?._id}`, values);
+  return response.data;
+};
+
+export const verifyVoucher = async (code: string) => {
+  const response = await axios.post(`/api/voucher/verify?code=${code}`);
+  return response.data;
+};
+
+export const addOrder = async ({
+  productId,
+  variant,
+  voucherAmount,
+  voucherId,
+}: IAddOrder) => {
+  const response = await axios.post(`/api/orders`, {
+    productId,
+    variant,
+    voucherAmount,
+    voucherId,
+  });
   return response.data;
 };

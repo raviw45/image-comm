@@ -3,6 +3,7 @@ import {
   deleteVoucher,
   getVouchers,
   updateVoucher,
+  verifyVoucher,
 } from "@/services/orderApi";
 import { AddVoucherFormData, IVoucher } from "@/types/product.types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -79,5 +80,23 @@ export const useUpdateVoucher = () => {
     updateVoucher: mutate,
     isUpdatingVoucherPending: isPending,
     isUpdatingVoucherError: isError,
+  };
+};
+
+export const useVerifyVoucher = () => {
+  const { mutate, isPending } = useMutation({
+    mutationFn: (code: string) => verifyVoucher(code),
+    onSuccess: () => {
+      toast.success("Voucher code verified successfully!");
+    },
+    onError: (error: any) =>
+      toast.error(
+        error?.response?.data?.error || "Failed to verify voucher code"
+      ),
+  });
+
+  return {
+    verifyVoucher: mutate,
+    isVerifyingVoucherPending: isPending,
   };
 };

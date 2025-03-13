@@ -13,6 +13,8 @@ import { ImageVariant } from "@/types/product.types";
 import Spinner from "./Spinner";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
+import OrderSummary from "./user/OrderSummary";
 const getAspectRatioClass = (type: string) => {
   switch (type) {
     case "SQUARE":
@@ -33,6 +35,8 @@ const ProductDetails = () => {
   const { product, isProductLoading } = useGetProductById(id as string);
   const [selectedIndex, setSelectedIndex] = useState<Number>();
   const { addToCart, isAddingToCartPending } = useAddToCart();
+  const [isBuyNowModalOpen, setIsBuyNowModalOpen] = useState<boolean>(false);
+  const [variantProp, setVariantProp] = useState<ImageVariant | null>(null);
   const { cartItems } = useGetCartItems();
   const { deleteVariant, deleteVariantPending } = useDeleteVariant(
     id as string
@@ -105,7 +109,7 @@ const ProductDetails = () => {
         <div className="mt-6">
           <h2 className="text-xl font-semibold mb-3">Available Variants</h2>
           <div className="space-y-4">
-            {product?.variants?.map((variant: any, index: number) => {
+            {product?.variants?.map((variant: ImageVariant, index: number) => {
               const isInCart = cartItems?.some(
                 (item: any) =>
                   item?.productId?._id === id &&
@@ -169,7 +173,13 @@ const ProductDetails = () => {
                           )}
                         </Button>
                       )}
-                      <Button className="bg-orange-600 hover:shadow-lg hover:bg-orange-600/85 duration-200 ease-in-out">
+                      <Button
+                        onClick={() => {
+                          setIsBuyNowModalOpen(!isBuyNowModalOpen);
+                          setVariantProp(variant);
+                        }}
+                        className="bg-orange-600 hover:shadow-lg hover:bg-orange-600/85 duration-200 ease-in-out"
+                      >
                         <FaShippingFast size={20} />
                         Buy Now
                       </Button>
@@ -179,6 +189,18 @@ const ProductDetails = () => {
               );
             })}
           </div>
+          <Dialog
+            open={isBuyNowModalOpen}
+            onOpenChange={() => setIsBuyNowModalOpen(!isBuyNowModalOpen)}
+          >
+            <DialogContent>
+              <DialogTitle>Place Order</DialogTitle>
+              <OrderSummary
+                product={product}
+                variant={variantProp && variantProp}
+              />
+            </DialogContent>
+          </Dialog>
         </div>
       )}
     </section>

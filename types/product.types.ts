@@ -69,6 +69,13 @@ export interface IOrder {
   updatedAt?: Date;
 }
 
+export interface IAddOrder {
+  productId: string;
+  variant: ImageVariant | null;
+  voucherAmount: number;
+  voucherId: string;
+}
+
 export interface IVoucher {
   _id?: mongoose.Types.ObjectId;
   name: string;

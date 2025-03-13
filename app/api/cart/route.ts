@@ -69,6 +69,7 @@ export async function GET() {
         path: "productId",
         select: "name image description ",
         options: { strictPopulate: false },
+        model: Product,
       })
       .lean();
     // Filter out cart items where productId is null (product was deleted)

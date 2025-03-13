@@ -4,6 +4,7 @@ import "../globals.css";
 import Providers from "@/components/Providers";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,6 +24,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.className} antialiased`}>
+        <Script
+          src="https://checkout.razorpay.com/v1/checkout.js"
+          strategy="lazyOnload"
+        />
         <Providers>
           <section className="flex min-h-screen overflow-x-hidden">
             {/* Sidebar */}

@@ -12,6 +12,7 @@ import { useSession } from "next-auth/react";
 const AllProducts = () => {
   const { data: session } = useSession();
   const { products, isProductsLoading } = useGetProducts();
+  console.log(products);
   const { deleteProduct, deleteProductPending } = useDeleteProduct();
   if (isProductsLoading) return <Loader />;
 
@@ -20,46 +21,52 @@ const AllProducts = () => {
   };
   return (
     <section className="grid overflow-x-hidden grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-4">
-      {products.map((product: any, index: number) => (
-        <div
-          key={index}
-          className="relative group overflow-hidden rounded-lg shadow-md border border-gray-200 bg-white hover:shadow-xl transition-all duration-300"
-        >
-          {/* Image Section */}
-          <Link
-            href={`${
-              session?.user?.role === "admin" ? "/admin/product/" : "/product/"
-            }${product?._id}`}
+      {products &&
+        products?.length > 0 &&
+        products?.map((product: any, index: number) => (
+          <div
+            key={index}
+            className="relative group overflow-hidden rounded-lg shadow-md border border-gray-200 bg-white hover:shadow-xl transition-all duration-300"
           >
-            <div className="relative h-48 sm:h-56 md:h-60 w-full">
-              <Image
-                src={product?.image}
-                alt={product?.name}
-                layout="fill"
-                objectFit="cover"
-                className="group-hover:scale-105 transition-transform duration-300"
-              />
-            </div>
-          </Link>
+            {/* Image Section */}
+            <Link
+              href={`${
+                session?.user?.role === "admin"
+                  ? "/admin/product/"
+                  : "/product/"
+              }${product?._id}`}
+            >
+              <div className="relative h-48 sm:h-56 md:h-60 w-full">
+                <Image
+                  src={product?.image}
+                  alt={product?.name}
+                  layout="fill"
+                  objectFit="cover"
+                  className="group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+            </Link>
 
-          {/* Overlay on Hover */}
-          {session?.user?.role === "admin" && (
-            <div className="absolute bottom-0 left-0 w-full bg-black/60 text-white p-3 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <h2 className="text-sm font-medium truncate">{product?.name}</h2>
-              <button
-                onClick={() => handleDelete(product?._id)}
-                className="p-1 rounded-full hover:bg-red-500 transition duration-300"
-              >
-                {deleteProductPending ? (
-                  <Spinner />
-                ) : (
-                  <BiTrash size={22} className="text-white" />
-                )}
-              </button>
-            </div>
-          )}
-        </div>
-      ))}
+            {/* Overlay on Hover */}
+            {session?.user?.role === "admin" && (
+              <div className="absolute bottom-0 left-0 w-full bg-black/60 text-white p-3 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <h2 className="text-sm font-medium truncate">
+                  {product?.name}
+                </h2>
+                <button
+                  onClick={() => handleDelete(product?._id)}
+                  className="p-1 rounded-full hover:bg-red-500 transition duration-300"
+                >
+                  {deleteProductPending ? (
+                    <Spinner />
+                  ) : (
+                    <BiTrash size={22} className="text-white" />
+                  )}
+                </button>
+              </div>
+            )}
+          </div>
+        ))}
     </section>
   );
 };
