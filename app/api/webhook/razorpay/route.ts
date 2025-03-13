@@ -23,10 +23,10 @@ export async function POST(req: NextRequest) {
 
     if (event.event === "payment.captured") {
       const payment = event.payload.payment.entity;
-
+      console.log(payment);
       const order = await Order.findOneAndUpdate(
-        { razorpayOrderId: payment.order._id },
-        { razorpayPaymentId: payment.id, status: "completed" }
+        { razorpayOrderId: payment?.order_id },
+        { razorpayPaymentId: payment?.id, status: "completed" }
       ).populate([
         { path: "userId", select: "email" },
         { path: "productId", select: "name" },
