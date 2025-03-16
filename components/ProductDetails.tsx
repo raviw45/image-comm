@@ -96,7 +96,7 @@ const ProductDetails = () => {
           alt={product?.name}
           width={300}
           height={300}
-          className="object-cover rounded-lg shadow-lg"
+          className="object-cover border rounded-lg shadow-lg"
         />
         <div className="flex-1">
           <h1 className="text-2xl font-bold">{product?.name}</h1>

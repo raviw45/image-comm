@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
         - Product: ${order.productId.name}
         - Version: ${order.variant.type}
         - License: ${order.variant.license}
-        - Price: $${order.amount.toFixed(2)}
+        - Price: Rs.${order.amount.toFixed(2)}
 
         Your image is now available in your orders page.
         Thank you for shopping with ImageKit Shop!

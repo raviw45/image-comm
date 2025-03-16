@@ -64,7 +64,7 @@ export async function GET() {
     }
 
     await connectToDatabase();
-    let cartItems = await Cart.find({ userId: session?.user?.id })
+    let cartItems = await Cart.find({ userId: session?.user?.id as string })
       .populate({
         path: "productId",
         select: "name image description ",

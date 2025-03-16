@@ -57,7 +57,7 @@ const OrderSummary = ({
           setFinalAmount(variant?.price || 0);
           return;
         }
-
+        setVoucher(voucher);
         // Apply discount
         setDiscount(discountValue);
         setFinalAmount((variant?.price || 0) - discountValue);
@@ -81,10 +81,10 @@ const OrderSummary = ({
         voucherAmount: discount,
         voucherId: voucher?._id?.toString()!,
       });
-      const { orderId } = data;
+      const { orderId, finalPrice } = data;
       const rzp = new (window as any).Razorpay({
         key: process.env.RAZORPAY_KEY,
-        amount: finalAmount,
+        amount: finalPrice * 100,
         currency: "INR",
         name: "mediastock",
         description: `${product?.name} - ${variant?.type} Version`,
