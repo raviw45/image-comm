@@ -114,7 +114,7 @@ const AllCartItems = () => {
               </div>
 
               {/* Action Buttons */}
-              <div className="md:space-x-4 space-x-2 space-y-4">
+              <div className="md:space-x-4 space-x-2 space-y-2 text-center">
                 {isOrdered ? (
                   <Link href="/orders">
                     <Button className="bg-green-600 hover:bg-green-700">
