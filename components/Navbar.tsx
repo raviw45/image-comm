@@ -57,7 +57,7 @@ const Navbar = () => {
   if (session?.user?.role === "admin") return;
 
   return (
-    <nav className="w-screen fixed z-50 h-20 bg-white p-2">
+    <nav className="w-screen fixed z-50 h-20 bg-white p-2 overflow-hidden">
       <div className="w-full h-full flex justify-between items-center md:px-10 px-2">
         <div className="flex flex-row gap-8">
           <Link

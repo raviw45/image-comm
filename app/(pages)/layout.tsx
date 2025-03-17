@@ -4,6 +4,7 @@ import "../globals.css";
 import Providers from "@/components/Providers";
 import Navbar from "@/components/Navbar";
 import Script from "next/script";
+import Footer from "@/components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +34,7 @@ export default function RootLayout({
           <Navbar />
           {modal}
           {children}
+          <Footer />
         </Providers>
       </body>
     </html>

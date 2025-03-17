@@ -22,7 +22,7 @@ const Page = () => {
   if (!session) return <h1 className="text-red-600 text-5xl">not logged</h1>;
 
   return (
-    <div className="pt-20 px-2 overflow-x-hidden">
+    <div className="pt-20 px-2 overflow-hidden">
       <AllProducts />
     </div>
   );
