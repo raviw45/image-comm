@@ -85,3 +85,37 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+
+export async function GET() {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session || session?.user?.role !== "admin") {
+      return NextResponse.json(
+        {
+          error: "Unauthorized Access",
+        },
+        { status: 401 }
+      );
+    }
+    await connectToDatabase();
+    const orders = await Order.find({})
+      .populate({
+        path: "userId",
+        select: "username email",
+        options: { strictPopulate: false },
+      })
+      .populate({
+        path: "productId",
+        select: "name image",
+        options: { strictPopulate: false },
+      })
+      .lean();
+    return NextResponse.json(orders, { status: 200 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}

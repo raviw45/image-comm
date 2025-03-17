@@ -82,7 +82,7 @@ const Sidebar = () => {
         <ul className="flex flex-col py-4">
           <SidebarItem href="/admin" icon={<BiHome />} label="Dashboard" />
           <SidebarItem
-            href="/admin/shopping"
+            href="/admin/orders"
             icon={<BiShoppingBag />}
             label="Sell History"
           />
@@ -96,12 +96,7 @@ const Sidebar = () => {
             icon={<LuTicketCheck />}
             label="Voucher"
           />
-          <SidebarItem
-            href="/admin/notifications"
-            icon={<BiBell />}
-            label="Notifications"
-            badge="5"
-          />
+
           <li
             onClick={() => {
               logout();

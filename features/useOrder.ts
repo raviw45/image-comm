@@ -1,6 +1,8 @@
 import {
   addVoucher,
   deleteVoucher,
+  getAllOrders,
+  getOrders,
   getVouchers,
   updateVoucher,
   verifyVoucher,
@@ -98,5 +100,27 @@ export const useVerifyVoucher = () => {
   return {
     verifyVoucher: mutate,
     isVerifyingVoucherPending: isPending,
+  };
+};
+
+export const useGetOrders = () => {
+  const { data, isPending } = useQuery({
+    queryKey: ["orders"],
+    queryFn: getOrders,
+  });
+  return {
+    orders: data,
+    isOrdersLoading: isPending,
+  };
+};
+
+export const useGetAllOrders = () => {
+  const { data, isPending } = useQuery({
+    queryKey: ["orders"],
+    queryFn: getAllOrders,
+  });
+  return {
+    orders: data,
+    isOrdersLoading: isPending,
   };
 };

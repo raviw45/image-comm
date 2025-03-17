@@ -15,6 +15,8 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
 import OrderSummary from "./user/OrderSummary";
+import { useGetOrders } from "@/features/useOrder";
+import { IoCloudDownloadSharp } from "react-icons/io5";
 const getAspectRatioClass = (type: string) => {
   switch (type) {
     case "SQUARE":
@@ -33,11 +35,13 @@ const ProductDetails = () => {
   const { data: session } = useSession();
   const router = useRouter();
   const { product, isProductLoading } = useGetProductById(id as string);
+
   const [selectedIndex, setSelectedIndex] = useState<Number>();
   const { addToCart, isAddingToCartPending } = useAddToCart();
   const [isBuyNowModalOpen, setIsBuyNowModalOpen] = useState<boolean>(false);
   const [variantProp, setVariantProp] = useState<ImageVariant | null>(null);
   const { cartItems } = useGetCartItems();
+  const { orders } = useGetOrders();
   const { deleteVariant, deleteVariantPending } = useDeleteVariant(
     id as string
   );
@@ -90,7 +94,7 @@ const ProductDetails = () => {
         </svg>
       </button>
       {/* Main Product Image */}
-      <div className="relative w-full  mx-auto mt-4 overflow-hidden flex justify-between gap-4 ">
+      <div className="relative w-full  mx-auto mt-4 overflow-hidden flex md:flex-row flex-col justify-between gap-4 ">
         <Image
           src={product?.image}
           alt={product?.name}
@@ -115,10 +119,15 @@ const ProductDetails = () => {
                   item?.productId?._id === id &&
                   item?.variant?.type === variant.type
               );
+              const isOrdered = orders?.some(
+                (order: any) =>
+                  order.productId._id === product._id &&
+                  order.variant.type === variant.type
+              );
               return (
                 <div
                   key={index}
-                  className="flex flex-wrap items-center gap-4 bg-gray-100 md:p-4 p-2 rounded-lg shadow-md"
+                  className="flex md:flex-row flex-col items-center gap-4 bg-gray-100 md:p-4 p-2 rounded-lg shadow-md"
                 >
                   <div
                     className={`relative w-32 ${getAspectRatioClass(
@@ -173,16 +182,25 @@ const ProductDetails = () => {
                           )}
                         </Button>
                       )}
-                      <Button
-                        onClick={() => {
-                          setIsBuyNowModalOpen(!isBuyNowModalOpen);
-                          setVariantProp(variant);
-                        }}
-                        className="bg-orange-600 hover:shadow-lg hover:bg-orange-600/85 duration-200 ease-in-out"
-                      >
-                        <FaShippingFast size={20} />
-                        Buy Now
-                      </Button>
+                      {isOrdered ? (
+                        <Link href="/orders">
+                          <Button className="bg-green-600 hover:bg-green-700">
+                            <IoCloudDownloadSharp />
+                            Go to Orders
+                          </Button>
+                        </Link>
+                      ) : (
+                        <Button
+                          onClick={() => {
+                            setIsBuyNowModalOpen(!isBuyNowModalOpen);
+                            setVariantProp(variant);
+                          }}
+                          className="bg-orange-600 hover:shadow-lg hover:bg-orange-600/85 duration-200 ease-in-out"
+                        >
+                          <FaShippingFast size={20} />
+                          Buy Now
+                        </Button>
+                      )}
                     </div>
                   )}
                 </div>
@@ -193,8 +211,10 @@ const ProductDetails = () => {
             open={isBuyNowModalOpen}
             onOpenChange={() => setIsBuyNowModalOpen(!isBuyNowModalOpen)}
           >
-            <DialogContent>
-              <DialogTitle>Place Order</DialogTitle>
+            <DialogContent className="w-[90%] rounded-lg max-w-full sm:max-w-lg p-4 sm:p-6">
+              <DialogTitle className="text-lg sm:text-xl font-semibold hidden">
+                Place Order
+              </DialogTitle>
               <OrderSummary
                 product={product}
                 variant={variantProp && variantProp}

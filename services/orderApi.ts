@@ -40,3 +40,13 @@ export const addOrder = async ({
   });
   return response.data;
 };
+
+export const getOrders = async () => {
+  const response = await axios.get("/api/orders/user");
+  return response.data;
+};
+
+export const getAllOrders = async () => {
+  const response = await axios.get("/api/orders");
+  return response.data;
+};

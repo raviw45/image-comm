@@ -12,8 +12,7 @@ export async function POST(req: NextRequest) {
       .createHmac("sha256", process.env.RAZORPAY_WEBHOOK_SECRET!)
       .update(body)
       .digest("hex");
-    console.log(signature);
-    console.log(expectedSignature);
+
     if (signature !== expectedSignature) {
       return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
     }
@@ -23,7 +22,6 @@ export async function POST(req: NextRequest) {
 
     if (event.event === "payment.captured") {
       const payment = event.payload.payment.entity;
-      console.log(payment);
       const order = await Order.findOneAndUpdate(
         { razorpayOrderId: payment?.order_id },
         { razorpayPaymentId: payment?.id, status: "completed" }
@@ -65,6 +63,7 @@ export async function POST(req: NextRequest) {
                   `.trim(),
       });
     }
+    return NextResponse.json({ message: "Webhook processed successfully" });
   } catch (error) {
     console.log("mail error -------", error);
     return NextResponse.json(

@@ -47,18 +47,14 @@ const OrderSummary = ({
           return;
         }
 
-        // Check if discount can be applied
         const discountValue = voucher.discountAmount || 0;
         if (discountValue >= (variant?.price || 0)) {
-          setError(
-            `Product price must needs to be greater than ₹${discountValue}`
-          );
+          setError(`Product price must be greater than ₹${discountValue}`);
           setDiscount(0);
           setFinalAmount(variant?.price || 0);
           return;
         }
         setVoucher(voucher);
-        // Apply discount
         setDiscount(discountValue);
         setFinalAmount((variant?.price || 0) - discountValue);
       },
@@ -72,7 +68,8 @@ const OrderSummary = ({
 
   const handlePurchase = async () => {
     if (!session) {
-      toast.error("Please login!!");
+      toast.error("Please login!");
+      return;
     }
     try {
       const data = await addOrder({
@@ -96,13 +93,13 @@ const OrderSummary = ({
       });
       rzp.open();
     } catch (error) {
-      console.error("Purchase failed:", error);
       toast.error("Purchase failed. Please try again.");
     }
   };
+
   return (
-    <section className="flex flex-col gap-6 p-6 border rounded-lg shadow-md bg-white w-full mx-auto">
-      <div className="flex items-center gap-6">
+    <section className="flex flex-col md:gap-6 gap-2 md:p-6 p-2 w-full">
+      <div className="flex md:flex-row flex-col items-center md:gap-6 gap-2">
         <div className={`relative w-36 ${getAspectRatioClass(variant?.type!)}`}>
           <Image
             src={product?.image}
@@ -112,25 +109,28 @@ const OrderSummary = ({
           />
         </div>
         <div className="flex flex-col gap-1">
-          <h2 className="font-semibold text-lg text-gray-800">
+          <h2 className="font-semibold md:text-lg text-md text-gray-800">
             {product.name}
           </h2>
-          <span className="text-md text-gray-600 flex items-center gap-2">
+          <span className="md:text-md text-xs text-gray-600 flex items-center gap-2">
             Type: <Badge>{variant?.type}</Badge>
           </span>
         </div>
       </div>
 
       <div className="flex flex-col gap-2">
-        <div className="flex gap-3 items-center">
+        <div className="flex md:flex-row flex-col gap-3 items-center">
           <Input
             type="text"
             placeholder="Enter coupon code"
             value={coupon}
             onChange={(e) => setCoupon(e.target.value)}
-            className="flex-1 border-gray-300 shadow-sm"
+            className="flex-1 md:text-md text-sm border-gray-300 shadow-sm"
           />
-          <Button onClick={applyCoupon} className="text-white">
+          <Button
+            onClick={applyCoupon}
+            className="text-white md:text-md text-sm w-full md:w-auto"
+          >
             {isVerifyingVoucherPending ? <Spinner /> : "Apply"}
           </Button>
         </div>
@@ -140,23 +140,26 @@ const OrderSummary = ({
         )}
       </div>
 
-      <div className="bg-gray-100 border p-4 rounded-lg shadow-sm">
-        <div className="flex justify-between text-gray-700 font-medium">
+      <div className="md:p-4 p-2">
+        <div className="flex justify-between md:text-md text-sm text-gray-700 md:font-medium font-normal">
           <span>Total Price:</span>
           <span className="text-gray-900">&#8377;{variant?.price}</span>
         </div>
-        <div className="flex justify-between text-gray-700 font-medium mt-1">
+        <div className="flex justify-between md:text-md text-sm text-gray-700 md:font-medium font-normal mt-1">
           <span>Discount:</span>
           <span className="text-green-600">- &#8377;{discount.toFixed(2)}</span>
         </div>
         <hr className="my-2 border-gray-300" />
-        <div className="flex justify-between text-md font-semibold text-gray-900">
+        <div className="flex justify-between md:text-md text-sm font-semibold text-gray-900">
           <span>Final Amount:</span>
           <span className="text-blue-600">&#8377;{finalAmount.toFixed(2)}</span>
         </div>
       </div>
 
-      <Button onClick={handlePurchase} className="w-full text-white">
+      <Button
+        onClick={handlePurchase}
+        className="w-full md:text-md text-sm text-white"
+      >
         Proceed To Pay
       </Button>
     </section>
