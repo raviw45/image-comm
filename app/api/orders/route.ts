@@ -2,7 +2,7 @@ import { authOptions } from "@/lib/auth";
 import connectToDatabase from "@/lib/db";
 import Order from "@/models/Order";
 import Voucher from "@/models/Voucher"; // ✅ Import Voucher model
-import { IVoucher } from "@/types/product.types";
+import { IOrder, IVoucher } from "@/types/product.types";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import Razorpay from "razorpay";
@@ -34,19 +34,16 @@ export async function POST(req: NextRequest) {
     // Ensure discount is not greater than the original price
     const discountedAmount = Math.max(variant?.price - voucherAmount, 0);
 
-    // Check and update voucher usage
+    // Validate the voucher but do not deduct count yet
+    let voucher = null;
     if (voucherId) {
-      const voucher = await Voucher.findById(voucherId);
+      voucher = await Voucher.findById(voucherId);
       if (!voucher || voucher.voucherCount <= 0) {
         return NextResponse.json(
           { error: "Voucher has expired or is invalid." },
           { status: 400 }
         );
       }
-
-      // Reduce voucher count
-      voucher.voucherCount -= 1;
-      await voucher.save();
     }
 
     // Create order with the correct discounted amount
@@ -60,14 +57,14 @@ export async function POST(req: NextRequest) {
     });
 
     // Store order in database with correct amount
-    const newOrder = await Order.create({
+    const newOrder: IOrder = await Order.create({
       userId: session.user.id,
       productId,
       variant,
       razorpayOrderId: order.id,
       amount: discountedAmount,
-      voucherAmount,
-      voucherId,
+      voucherAmount: Number(voucherAmount),
+      voucherId: voucherId as string,
       status: "pending",
     });
 
@@ -111,6 +108,39 @@ export async function GET() {
       })
       .lean();
     return NextResponse.json(orders, { status: 200 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json(
+        { error: "Unauthorized Access" },
+        { status: 401 }
+      );
+    }
+
+    const orderId = req?.nextUrl?.searchParams?.get("id");
+    if (!orderId) {
+      return NextResponse.json(
+        { error: "Order ID is required" },
+        { status: 400 }
+      );
+    }
+    await connectToDatabase();
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return NextResponse.json({ error: "Order not found" }, { status: 404 });
+    }
+    await Order.findByIdAndDelete(orderId);
+    return NextResponse.json({ message: "Order deleted" }, { status: 200 });
   } catch (error) {
     console.log(error);
     return NextResponse.json(

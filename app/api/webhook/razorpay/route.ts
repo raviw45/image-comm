@@ -3,6 +3,7 @@ import crypto from "crypto";
 import connectToDatabase from "@/lib/db";
 import Order from "@/models/Order";
 import nodemailer from "nodemailer";
+import Voucher from "@/models/Voucher";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.text();
@@ -30,6 +31,21 @@ export async function POST(req: NextRequest) {
         { path: "productId", select: "name" },
       ]);
 
+      if (order && order.voucherId) {
+        // Deduct voucher count
+        const updatedProduct = await Voucher.findByIdAndUpdate(
+          order.voucherId,
+          { $inc: { voucherCount: -1 } },
+          { new: true }
+        );
+
+        if (!updatedProduct) {
+          return NextResponse.json(
+            { error: "Failed to update voucher count" },
+            { status: 500 }
+          );
+        }
+      }
       // Send email only after payment is confirmed
       const transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",

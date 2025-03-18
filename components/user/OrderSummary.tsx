@@ -4,11 +4,13 @@ import React, { useState } from "react";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { useVerifyVoucher } from "@/features/useOrder";
+import { useDeleteOrder, useVerifyVoucher } from "@/features/useOrder";
 import Spinner from "../Spinner";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { addOrder } from "@/services/orderApi";
+import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 const getAspectRatioClass = (type: string) => {
   switch (type) {
@@ -30,13 +32,17 @@ const OrderSummary = ({
   product: any;
   variant: ImageVariant | null;
 }) => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const [coupon, setCoupon] = useState("");
   const { data: session } = useSession();
   const [discount, setDiscount] = useState(0);
   const [finalAmount, setFinalAmount] = useState(variant?.price || 0);
   const [error, setError] = useState("");
+  const { deleteOrder } = useDeleteOrder();
   const { verifyVoucher, isVerifyingVoucherPending } = useVerifyVoucher();
   const [voucher, setVoucher] = useState<IVoucher>();
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const applyCoupon = () => {
     setError("");
@@ -71,6 +77,9 @@ const OrderSummary = ({
       toast.error("Please login!");
       return;
     }
+
+    setIsProcessing(true);
+
     try {
       const data = await addOrder({
         productId: product?._id,
@@ -78,7 +87,8 @@ const OrderSummary = ({
         voucherAmount: discount,
         voucherId: voucher?._id?.toString()!,
       });
-      const { orderId, finalPrice } = data;
+
+      const { orderId, finalPrice, dbOrderId } = data;
       const rzp = new (window as any).Razorpay({
         key: process.env.RAZORPAY_KEY,
         amount: finalPrice * 100,
@@ -87,13 +97,27 @@ const OrderSummary = ({
         description: `${product?.name} - ${variant?.type} Version`,
         order_id: orderId,
         handler: () => {
+          queryClient.invalidateQueries({
+            queryKey: ["product", product?._id as string],
+          });
           toast.success("Payment successful!");
+          setIsProcessing(false);
+          router.push("/orders");
         },
         prefill: { email: session?.user.email },
+        modal: {
+          ondismiss: () => {
+            toast.error("Payment window closed.");
+            deleteOrder(dbOrderId);
+            setIsProcessing(false);
+          },
+        },
       });
+
       rzp.open();
     } catch (error) {
       toast.error("Purchase failed. Please try again.");
+      setIsProcessing(false);
     }
   };
 
@@ -159,8 +183,9 @@ const OrderSummary = ({
       <Button
         onClick={handlePurchase}
         className="w-full md:text-md text-sm text-white"
+        disabled={isProcessing}
       >
-        Proceed To Pay
+        {isProcessing ? <Spinner /> : "Proceed To Pay"}
       </Button>
     </section>
   );

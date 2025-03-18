@@ -17,6 +17,7 @@ import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
 import OrderSummary from "./user/OrderSummary";
 import { useGetOrders } from "@/features/useOrder";
 import { IoCloudDownloadSharp } from "react-icons/io5";
+
 const getAspectRatioClass = (type: string) => {
   switch (type) {
     case "SQUARE":
@@ -63,11 +64,28 @@ const ProductDetails = () => {
       productId: id as string | "",
       variant: variant,
     };
+
+    // Check if the user is logged in
+    if (!session) {
+      router.push("/login"); // Redirect to login page if not logged in
+      return;
+    }
+
     if (cartItems.length >= 30) {
       toast.error("Cart Full!!");
     } else {
       addToCart(product);
     }
+  };
+
+  const handleBuyNow = (variant: ImageVariant) => {
+    if (!session) {
+      router.push("/login"); // Redirect to login page if not logged in
+      return;
+    }
+
+    setIsBuyNowModalOpen(!isBuyNowModalOpen);
+    setVariantProp(variant);
   };
 
   return (
@@ -191,10 +209,7 @@ const ProductDetails = () => {
                         </Link>
                       ) : (
                         <Button
-                          onClick={() => {
-                            setIsBuyNowModalOpen(!isBuyNowModalOpen);
-                            setVariantProp(variant);
-                          }}
+                          onClick={() => handleBuyNow(variant)}
                           className="bg-orange-600 hover:shadow-lg hover:bg-orange-600/85 duration-200 ease-in-out"
                         >
                           <FaShippingFast size={20} />

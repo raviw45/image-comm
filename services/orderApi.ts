@@ -50,3 +50,8 @@ export const getAllOrders = async () => {
   const response = await axios.get("/api/orders");
   return response.data;
 };
+
+export const deleteOrder = async (id: string) => {
+  const response = await axios.delete(`/api/orders?id=${id}`);
+  return response.data;
+};

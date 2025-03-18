@@ -63,8 +63,8 @@ export interface IOrder {
   razorpayPaymentId?: string;
   status: "pending" | "completed" | "cancelled";
   amount: number;
-  downloadUrl?: string;
-  previewUrl?: string;
+  voucherAmount?: number;
+  voucherId?: mongoose.Types.ObjectId | string;
   createdAt?: Date;
   updatedAt?: Date;
 }

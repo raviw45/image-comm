@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
 
     const voucher: IVoucher | null = await Voucher.findOne(
       { code },
-      "isActive name discountAmount _id"
+      "isActive name discountAmount _id voucherCount"
     );
 
     if (!voucher) {
@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
 
     if (voucher.voucherCount === 0) {
       return NextResponse.json(
-        { error: "Voucher is not available to use" },
+        { error: "Voucher is not available. Please try another one.." },
         { status: 409 }
       );
     }

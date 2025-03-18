@@ -1,5 +1,6 @@
 import {
   addVoucher,
+  deleteOrder,
   deleteVoucher,
   getAllOrders,
   getOrders,
@@ -122,5 +123,26 @@ export const useGetAllOrders = () => {
   return {
     orders: data,
     isOrdersLoading: isPending,
+  };
+};
+
+export const useDeleteOrder = () => {
+  const queryClient = useQueryClient();
+  const { mutate, isPending, isError } = useMutation({
+    mutationFn: (id: string) => deleteOrder(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+      toast.success("Order Cancelled!");
+    },
+    onError: (error: any) =>
+      toast.error(
+        error?.response?.data?.error ||
+          "Failed to delete order. Please try again."
+      ),
+  });
+  return {
+    deleteOrder: mutate,
+    isDeletingOrderPending: isPending,
+    isDeletingOrderError: isError,
   };
 };

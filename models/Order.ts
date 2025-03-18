@@ -44,11 +44,14 @@ const orderSchema = new Schema<IOrder>(
       type: Number,
       required: true,
     },
-    downloadUrl: {
-      type: String,
+    voucherAmount: {
+      type: Number,
+      required: false,
     },
-    previewUrl: {
-      type: String,
+    voucherId: {
+      type: mongoose.Types.ObjectId,
+      required: false,
+      ref: "Voucher",
     },
   },
   { timestamps: true }

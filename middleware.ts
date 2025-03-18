@@ -33,11 +33,18 @@ export default withAuth(
         // Publicly accessible routes
         if (
           pathname === "/" ||
-          pathname.startsWith("/api/products") ||
-          pathname.startsWith("/products")
+          pathname.startsWith("/api/product") ||
+          pathname.startsWith("/api/voucher") ||
+          pathname.startsWith("/product/")
         ) {
           return true;
         }
+
+        if (
+          pathname.startsWith("/api/cart") ||
+          pathname.startsWith("/api/orders")
+        )
+          return true;
 
         // Allow access to /admin only for admins
         if (pathname.startsWith("/admin")) {

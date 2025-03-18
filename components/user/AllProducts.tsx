@@ -62,31 +62,37 @@ const AllProducts = () => {
   return (
     <section className="overflow-hidden">
       {/* Show the Voucher Code Section */}
-      {selectedVoucher && !isVouchersLoading && (
-        <div className="bg-yellow-200 text-black p-4 rounded-lg text-center mb-4">
-          <p className="text-lg font-semibold">
-            🎉 Special Offer: {selectedVoucher?.name}
-          </p>
-          <p className="text-sm">
-            Use code <span className="font-bold">{selectedVoucher.code}</span>{" "}
-            for{" "}
-            <span className="font-bold">{selectedVoucher.discountAmount}%</span>{" "}
-            off!
-          </p>
-          <p className="text-xs text-gray-700">
-            Valid until:{" "}
-            {new Date(selectedVoucher.expiryDate).toLocaleDateString()}
-          </p>
-        </div>
-      )}
+      {session?.user?.role !== "admin" &&
+        selectedVoucher &&
+        !isVouchersLoading && (
+          <div className="bg-yellow-200 text-black p-4 rounded-lg text-center mb-4">
+            <p className="text-lg font-semibold">
+              🎉 Special Offer: {selectedVoucher?.name}
+            </p>
+            <p className="text-sm">
+              Use code <span className="font-bold">{selectedVoucher.code}</span>{" "}
+              for{" "}
+              <span className="font-bold">
+                {selectedVoucher.discountAmount}%
+              </span>{" "}
+              off!
+            </p>
+            <p className="text-xs text-gray-700">
+              Valid until:{" "}
+              {new Date(selectedVoucher.expiryDate).toLocaleDateString()}
+            </p>
+          </div>
+        )}
 
       {/* Search Bar */}
       <div className="relative md:h-[70vh] h-auto md:p-0 py-4 w-full mb-4 bg-black">
         <div className="absolute inset-0 bg-black/60"></div>
-        <div
+        <Image
+          src={"/bg.jpg"}
+          layout="fill"
+          alt="Background Image"
           className="absolute inset-0 opacity-70 bg-cover bg-center"
-          style={{ backgroundImage: `url("/bg.jpg")` }}
-        ></div>
+        />
 
         <div className="relative z-10 flex flex-col items-center justify-center h-full px-4 sm:px-6 text-center">
           {session?.user?.role !== "admin" && (
