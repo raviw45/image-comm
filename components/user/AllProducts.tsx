@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useDeleteProduct, useGetProducts } from "@/features/useProduct";
 import { useGetVouchers } from "@/features/useOrder";
