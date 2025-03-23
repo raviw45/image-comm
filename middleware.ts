@@ -35,7 +35,9 @@ export default withAuth(
           pathname === "/" ||
           pathname.startsWith("/api/product") ||
           pathname.startsWith("/api/voucher") ||
-          pathname.startsWith("/product/")
+          pathname.startsWith("/product/") ||
+          pathname.startsWith("/public/") ||
+          pathname.startsWith("/favicon.ico")
         ) {
           return true;
         }

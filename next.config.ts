@@ -8,7 +8,11 @@ const nextConfig: NextConfig = {
   },
   images: {
     unoptimized: true,
-    domains: ["res.cloudinary.com", "lh3.googleusercontent.com"],
+    domains: [
+      "res.cloudinary.com",
+      "lh3.googleusercontent.com",
+      "mediastock.vercel.app",
+    ],
   },
 };
 
