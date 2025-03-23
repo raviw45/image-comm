@@ -16,10 +16,10 @@ const Header = () => {
             height={30}
           />
         ) : (
-          <AvatarFallback className="text-xl font-bold text-black">
+          <AvatarFallback className="text-xl font-bold text-black uppercase">
             {session?.user?.name
               ? session.user.name.charAt(0).toUpperCase()
-              : session?.user?.username?.slice(0, 1)}
+              : session?.user?.username?.slice(0, 1).toUpperCase()}
           </AvatarFallback>
         )}
       </Avatar>

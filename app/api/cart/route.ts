@@ -2,6 +2,7 @@ import { authOptions } from "@/lib/auth";
 import connectToDatabase from "@/lib/db";
 import Cart from "@/models/Cart";
 import Product from "@/models/Product";
+import User from "@/models/User";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -64,7 +65,12 @@ export async function GET() {
     }
 
     await connectToDatabase();
-    let cartItems = await Cart.find({ userId: session?.user?.id as string })
+    const user = await User.findById(session.user.id);
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    let cartItems = await Cart.find({ userId: session?.user?.id.toString() })
       .populate({
         path: "productId",
         select: "name image description ",

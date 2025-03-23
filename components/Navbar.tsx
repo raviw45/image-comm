@@ -17,6 +17,7 @@ import {
 import { useLogout } from "@/features/useAuth";
 import Spinner from "./Spinner";
 import { useGetCartItems } from "@/features/useCart";
+import Image from "next/image";
 
 const germania = Germania_One({
   weight: "400",
@@ -97,20 +98,21 @@ const Navbar = () => {
           ) : (
             <DropdownMenu>
               <DropdownMenuTrigger className="focus:outline-none">
-                <Avatar className="border-2 border-gray-700 cursor-pointer">
+                <Avatar className="cursor-pointer bg-gray-200 flex justify-center items-center">
                   {session?.user?.image ? (
-                    <AvatarImage
+                    <Image
                       src={session.user.image}
                       alt="User Image"
-                      width={30}
-                      height={30}
+                      width={100}
+                      height={100}
+                      className="w-full h-full object-cover"
                     />
                   ) : (
-                    <AvatarFallback className="text-xl font-bold text-black capitalize">
+                    <p className="text-xl font-bold text-black uppercase border">
                       {session?.user?.name
                         ? session.user.name.charAt(0).toUpperCase()
-                        : session?.user?.username?.slice(0, 1)}
-                    </AvatarFallback>
+                        : session?.user?.username?.slice(0, 1).toUpperCase()}
+                    </p>
                   )}
                 </Avatar>
               </DropdownMenuTrigger>

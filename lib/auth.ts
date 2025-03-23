@@ -86,6 +86,19 @@ export const authOptions: NextAuthOptions = {
               username: user.name,
             });
           }
+
+          if (!existingUser) {
+            await User.create({
+              email: user.email,
+              username: user.name,
+            });
+            return true;
+          }
+
+          if (existingUser?.password) {
+            throw new Error("Please login with password.");
+          }
+
           return true;
         } catch (error) {
           console.log("Google login error:" + error);
@@ -102,7 +115,7 @@ export const authOptions: NextAuthOptions = {
   },
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    maxAge: 30 * 24 * 60 * 60,
   },
   secret: process.env.AUTH_SECRET,
 };

@@ -44,8 +44,11 @@ export const useLogin = () => {
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
-      console.log("Login error:", error?.message);
-      toast.error(error?.message || "Failed to login. Please try again...");
+      if (error instanceof Error) {
+        toast.error(error.message || "Failed to login. Please try again...");
+      } else {
+        toast.error("Unexpected error occurred. Please try again...");
+      }
     },
   });
   return {
@@ -78,18 +81,34 @@ export const useLogout = () => {
 
 export const useAuthLogin = () => {
   const { mutate, isPending, isError } = useMutation({
-    mutationFn: (provider: string) => signIn(provider, { callbackUrl: "/" }),
-    onSuccess: () => {
-      toast.success("Login Successful!!");
+    mutationFn: async (provider: string) => {
+      const result = await signIn(provider, {
+        callbackUrl: "/",
+        redirect: false,
+      });
+
+      if (!result || result?.error || result?.ok === false) {
+        throw new Error(
+          result?.error || "Google login failed. Please try again later."
+        );
+      }
+
+      return result;
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    onError: (error: any) => {
-      console.log(error?.response?.data?.error);
-      toast.error(
-        error?.response?.data?.error || "Failed to login. Please try again..."
-      );
+
+    onSuccess: () => {
+      toast.success("Login Successful!! 🎉");
+    },
+
+    onError: (error) => {
+      if (error instanceof Error) {
+        toast.error(error.message || "Failed to login. Please try again...");
+      } else {
+        toast.error("Unexpected error occurred. Please try again...");
+      }
     },
   });
+
   return {
     authLogin: mutate,
     isAuthLoginPending: isPending,
