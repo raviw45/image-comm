@@ -90,9 +90,12 @@ const AllProducts = () => {
         <div className="absolute inset-0 bg-black/60"></div>
         <Image
           src={"/bg.jpg"}
+          quality={100}
+          width={100}
+          height={100}
           layout="fill"
           alt="Background Image"
-          className="absolute inset-0 opacity-70 bg-cover bg-center"
+          className="absolute w-full h-full inset-0 opacity-70 bg-cover bg-center"
         />
 
         <div className="relative z-10 flex flex-col items-center justify-center h-full px-4 sm:px-6 text-center">
