@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
   },
   /* config options here */
   images: {
+    unoptimized: true,
     domains: [
       "res.cloudinary.com",
       "lh3.googleusercontent.com",
