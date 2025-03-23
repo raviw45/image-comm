@@ -32,12 +32,10 @@ export default withAuth(
 
         // Publicly accessible routes
         if (
-          pathname === "/" ||
-          pathname.startsWith("/api/product") ||
-          pathname.startsWith("/api/voucher") ||
-          pathname.startsWith("/product/") ||
-          pathname.startsWith("/public/") ||
-          pathname.startsWith("/favicon.ico")
+          pathname.startsWith("/_next/static/") ||
+          pathname.startsWith("/_next/image/") ||
+          pathname.startsWith("/images/") ||
+          pathname === "/favicon.ico"
         ) {
           return true;
         }

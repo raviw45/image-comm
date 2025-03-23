@@ -89,7 +89,7 @@ const AllProducts = () => {
       <div className="relative md:h-[70vh] h-auto md:p-0 py-4 w-full mb-4 bg-black">
         <div className="absolute inset-0 bg-black/60"></div>
         <Image
-          src={"/bg.jpg"}
+          src={"/images/bg.jpg"}
           quality={100}
           width={100}
           height={100}
