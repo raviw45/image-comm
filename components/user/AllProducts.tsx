@@ -88,12 +88,8 @@ const AllProducts = () => {
       {/* Search Bar */}
       <div className="relative md:h-[70vh] h-auto md:p-0 py-4 w-full mb-4 bg-black">
         <div className="absolute inset-0 bg-black/60"></div>
-        <Image
+        <img
           src={"/public/bg.jpg"}
-          quality={100}
-          width={100}
-          height={100}
-          layout="fill"
           alt="Background Image"
           className="absolute w-full h-full inset-0 opacity-70 bg-cover bg-center"
         />
