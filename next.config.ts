@@ -7,7 +7,11 @@ const nextConfig: NextConfig = {
   },
   /* config options here */
   images: {
-    domains: ["res.cloudinary.com", "lh3.googleusercontent.com"],
+    domains: [
+      "res.cloudinary.com",
+      "lh3.googleusercontent.com",
+      "https://mediastock.vercel.app/",
+    ],
   },
 };
 
