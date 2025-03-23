@@ -117,7 +117,7 @@ const ProductForm: React.FC = () => {
           <FormField
             control={form.control}
             name="image"
-            render={({ field: { onChange, ...rest } }) => (
+            render={({ field: { onChange } }) => (
               <FormItem>
                 <FormLabel>Product Image</FormLabel>
                 <FormControl>

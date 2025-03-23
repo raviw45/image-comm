@@ -2,12 +2,12 @@ import { authOptions } from "@/lib/auth";
 import connectToDatabase from "@/lib/db";
 import Order from "@/models/Order";
 import Voucher from "@/models/Voucher"; // ✅ Import Voucher model
-import { IOrder, IVoucher } from "@/types/product.types";
+import { IOrder } from "@/types/product.types";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import Razorpay from "razorpay";
 
-let razorpay = new Razorpay({
+const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY!,
   key_secret: process.env.RAZORPAY_SECRET!,
 });

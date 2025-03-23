@@ -7,7 +7,7 @@ import { BsCart3 } from "react-icons/bs";
 import { FaClipboardList } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
 import { useSession } from "next-auth/react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,

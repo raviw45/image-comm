@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import Loader from "@/components/ui/loader";
 import { useDeleteVariant, useGetProductById } from "@/features/useProduct";
@@ -37,7 +38,7 @@ const ProductDetails = () => {
   const router = useRouter();
   const { product, isProductLoading } = useGetProductById(id as string);
 
-  const [selectedIndex, setSelectedIndex] = useState<Number>();
+  const [selectedIndex, setSelectedIndex] = useState<number>();
   const { addToCart, isAddingToCartPending } = useAddToCart();
   const [isBuyNowModalOpen, setIsBuyNowModalOpen] = useState<boolean>(false);
   const [variantProp, setVariantProp] = useState<ImageVariant | null>(null);

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { ImageVariant, IVoucher } from "@/types/product.types";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -116,6 +118,7 @@ const OrderSummary = ({
 
       rzp.open();
     } catch (error) {
+      console.log(error);
       toast.error("Purchase failed. Please try again.");
       setIsProcessing(false);
     }

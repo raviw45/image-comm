@@ -7,8 +7,6 @@ import { usePathname } from "next/navigation";
 import {
   BiHome,
   BiShoppingBag,
-  BiUser,
-  BiBell,
   BiLogOut,
   BiMenu,
   BiX,

@@ -3,7 +3,7 @@ import { addVoucherFormSchema } from "@/schema/product.schema";
 import { AddVoucherFormData, IVoucher } from "@/types/product.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Germania_One } from "next/font/google";
+
 import {
   Form,
   FormControl,
@@ -16,13 +16,9 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useAddVoucher, useUpdateVoucher } from "@/features/useOrder";
 import Spinner from "../Spinner";
-import { useEffect } from "react";
+
 import { Switch } from "../ui/switch";
 
-const germania = Germania_One({
-  weight: "400",
-  subsets: ["latin"],
-});
 interface AddVoucherFormProps {
   voucher: IVoucher | null;
   onClose: () => void;
